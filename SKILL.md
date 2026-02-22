@@ -32,8 +32,11 @@ metadata:
 
 # Grocery Manager PT 🛒
 
-Skill de gestão de compras de mercearia para uma família de 7 pessoas em Portugal.
+Skill de gestão de compras de mercearia para famílias em Portugal.
 Opera em ciclo contínuo: inventário → previsão → triagem → comparação → compra → tracking.
+
+O tamanho do agregado familiar, membros, orçamento e preferências de entrega são lidos de
+`{baseDir}/data/family_preferences.json`. Configurar este ficheiro antes de usar a skill.
 
 **Diretório da skill:** `{baseDir}`
 
@@ -257,7 +260,7 @@ Após ✅ do admin:
 - Máximo 3 mensagens proativas/dia (não contar respostas a pedidos)
 - Quiet hours: 22h–8h (exceto alertas de stock urgente explicitamente pedidos)
 - Qualquer membro da família pode adicionar/remover itens
-- Apenas admin (Nuno) pode aprovar compras e ultrapassar budgets
+- Apenas utilizadores em `admin_users` (ver `{baseDir}/data/family_preferences.json`) podem aprovar compras e ultrapassar budgets
 
 ## Módulo 7 — Relatórios
 

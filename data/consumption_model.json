@@ -1,5 +1,5 @@
 {
-  "_comment": "Seed data com estimativas base para família de 7 pessoas. confidence=0.3 indica estimativas iniciais. O modelo ajusta-se com dados reais de compras.",
+  "_comment": "Seed data com estimativas base para um agregado familiar típico. confidence=0.3 indica estimativas iniciais — o modelo ajusta-se com dados reais de compras. Quantidades são para referência; escalam automaticamente com household_size em family_preferences.json.",
   "leite_meio_gordo": {
     "name": "Leite Meio-Gordo",
     "category": "lacticínios",
@@ -13,7 +13,7 @@
     "bulk_eligible": false,
     "confidence": 0.3,
     "active": true,
-    "notes": "Consumo base para 7 pessoas (~850ml/pessoa/semana)"
+    "notes": "Referência: ~850ml/pessoa/semana. Ajustar avg_weekly_consumption ao teu household_size."
   },
   "ovos": {
     "name": "Ovos",
@@ -28,7 +28,7 @@
     "bulk_eligible": false,
     "confidence": 0.3,
     "active": true,
-    "notes": "~2 dúzias/semana para 7 pessoas"
+    "notes": "Referência: ~3-4 ovos/pessoa/semana. Ajustar ao household_size."
   },
   "pao_de_forma": {
     "name": "Pão de Forma",
@@ -122,7 +122,7 @@
     "bulk_quantity": { "value": 2.0, "unit": "un" },
     "confidence": 0.3,
     "active": true,
-    "notes": "~1 embalagem grande/3 semanas para família de 7"
+    "notes": "Referência: ~1 embalagem grande/3 semanas para 4-6 pessoas. Ajustar ao household_size."
   },
   "papel_higienico": {
     "name": "Papel Higiénico",
@@ -245,7 +245,7 @@
     "bulk_eligible": false,
     "confidence": 0.3,
     "active": true,
-    "notes": "1 embalagem grande ~2 semanas para família de 7"
+    "notes": "Referência: ~1 embalagem grande/2 semanas para 4-6 pessoas. Ajustar ao household_size."
   },
   "manteiga": {
     "name": "Manteiga",

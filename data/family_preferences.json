@@ -1,22 +1,10 @@
 {
-  "household_size": 7,
+  "_comment": "Configuração do agregado familiar. Edita este ficheiro antes de usar a skill. Ver README para referência completa de campos.",
+  "household_size": 4,
   "dietary_restrictions": [],
   "brand_preferences": {
-    "leite": {
-      "preferred": "Mimosa",
-      "acceptable": [
-        "Terra Nostra",
-        "Continente",
-        "Pingo Doce"
-      ]
-    },
-    "cafe": {
-      "preferred": "Delta",
-      "acceptable": [
-        "Nespresso compatível",
-        "Marca própria"
-      ]
-    }
+    "_example_leite": { "preferred": "Mimosa", "acceptable": ["Terra Nostra", "Marca própria"] },
+    "_example_cafe": { "preferred": "Delta", "acceptable": ["Nespresso compatível"] }
   },
   "blocked_items": [],
   "budget": {
@@ -25,17 +13,12 @@
     "bulk_monthly_budget_eur": 120
   },
   "delivery_preferences": {
-    "preferred_days": [
-      "sábado",
-      "domingo"
-    ],
-    "preferred_time_slots": [
-      "10h-13h"
-    ],
-    "address": "TODO: CONFIGURAR MORADA"
+    "preferred_days": ["sábado", "domingo"],
+    "preferred_time_slots": ["10h-13h"],
+    "address": "TODO: Preencher morada de entrega"
   },
-  "admin_users": [],
-  "family_members": [],
+  "admin_users": ["Admin"],
+  "family_members": ["Admin"],
   "next_bulk_date": null,
   "bulk_interval_days": 30
 }

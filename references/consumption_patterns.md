@@ -119,14 +119,21 @@ Quando a família adiciona um produto que não existe no modelo:
 2. Começar a aprender com as compras subsequentes
 3. Após 4ª compra: sugerir ao utilizador se quer incluir nas previsões automáticas
 
-## Calibração Familiar (7 pessoas)
+## Calibração por Agregado Familiar
 
-Multiplicadores base por categoria:
-- Leite: ~6L/semana (quase 1L/pessoa/semana)
-- Pão: ~7 unidades/semana
-- Ovos: ~2 dúzias/semana
-- Fruta: ~5kg/semana
-- Carne/Peixe: ~4kg/semana
-- Arroz/Massa: ~2kg/semana
+Referência de consumo per capita por semana (multiplicar por `household_size` de `family_preferences.json`):
 
-Estes são pontos de partida — o modelo ajusta com dados reais.
+| Categoria | Per capita/semana |
+|---|---|
+| Leite | ~1L/pessoa |
+| Pão | ~1 unidade/pessoa |
+| Ovos | ~3-4 unidades/pessoa |
+| Fruta | ~700g/pessoa |
+| Carne/Peixe | ~600g/pessoa |
+| Arroz/Massa | ~300g/pessoa |
+
+O seed data em `data/consumption_model.json` usa valores para um agregado de 4 pessoas como referência.
+O agente lê `household_size` de `data/family_preferences.json` — ajustar os valores em `consumption_model.json`
+após a primeira compra real para reflectir os hábitos do teu agregado.
+
+Estes são pontos de partida — o modelo ajusta com dados reais ao longo do tempo.
