@@ -57,7 +57,15 @@ openclaw config set skills.entries.grocery-manager-pt.env.PINGODOCE_PASSWORD "pa
 
 ### 4. Configurar o agregado familiar
 
-Editar `data/family_preferences.json`:
+Copiar o template e editar com os teus dados reais:
+
+```bash
+cp data/family_preferences.example.json data/family_preferences.json
+```
+
+O ficheiro `family_preferences.json` está no `.gitignore` — os teus dados pessoais (morada, membros da família, budget) ficam apenas na tua máquina e nunca chegam ao repositório.
+
+Campos essenciais a preencher:
 
 ```json
 {
@@ -156,10 +164,11 @@ grocery-manager-pt/
 │   ├── price_comparison_logic.md # Algoritmo de otimização documentado
 │   └── consumption_patterns.md   # Modelo de consumo e fórmulas
 ├── assets/templates/             # Templates de mensagens WhatsApp
-├── data/                         # Dados persistentes (editáveis pelo utilizador)
-│   ├── family_preferences.json   # ← Começa aqui
+├── data/                               # Dados persistentes (editáveis pelo utilizador)
+│   ├── family_preferences.example.json # ← Template: copiar para family_preferences.json
+│   ├── family_preferences.json         # ← Criado localmente, no .gitignore
 │   ├── inventory.json
-│   ├── consumption_model.json    # Seed data incluído, aprende com compras reais
+│   ├── consumption_model.json          # Seed data incluído, aprende com compras reais
 │   ├── shopping_history.json
 │   └── price_cache.json
 └── tests/                        # 73 testes unitários
@@ -181,6 +190,8 @@ Esta abordagem é mais resiliente a mudanças no layout dos sites do que scraper
 ## Referência de Configuração
 
 ### `data/family_preferences.json`
+
+> Criado localmente a partir de `family_preferences.example.json`. Nunca commitado — está no `.gitignore`.
 
 | Campo                                       | Tipo         | Descrição                                                  |
 | ------------------------------------------- | ------------ | ---------------------------------------------------------- |

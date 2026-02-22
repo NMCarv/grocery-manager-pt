@@ -37,7 +37,7 @@ Quando alteras `scripts/`, estás a mudar a lógica de dados que o bot usa.
 | ------------------------------------------------------- | -------------------------------------------------------------------------------------- |
 | `scripts/consumption_tracker.py` → `weighted_average()` | Lógica de peso foi corrigida de um bug (mais recente = maior peso = ÚLTIMO da lista)   |
 | `scripts/list_optimizer.py` → `generate_triage()`       | Comparação de datas deve usar `datetime.now()` naive, não `datetime.now(timezone.utc)` |
-| `data/family_preferences.json`                          | Template de exemplo — não colocar dados pessoais reais                                 |
+| `data/family_preferences.example.json`                  | Template commitado — copiar para `family_preferences.json` (gitignored) localmente     |
 | `SKILL.md` → caminhos                                   | Usar sempre `{baseDir}/...`, nunca caminhos absolutos ou relativos hardcoded           |
 
 ## Ao fazer commit

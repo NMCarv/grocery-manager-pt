@@ -32,7 +32,7 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 **Dados**
 - Seed data em `data/consumption_model.json` com 18 produtos base
-- Template de configuração em `data/family_preferences.json`
+- Template de configuração em `data/family_preferences.example.json`
 
 **Testes**
 - 73 testes unitários (pytest) para os 4 scripts Python principais
@@ -54,6 +54,40 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 - Browser automation usa a **browser tool nativa do OpenClaw** (snapshots + refs numerados) em vez de Playwright com seletores CSS, tornando o sistema resiliente a mudanças no layout dos sites.
 - Scripts Python funcionam como utilitários de dados; a navegação é feita pelo agente LLM via browser tool.
+
+---
+
+## [0.2.0] — 2026-02-22
+
+### Adicionado
+
+**Lojas presenciais**
+- Campo `preferred_store` em `consumption_model.json`: `null` = online; string = loja presencial (ex: `"lidl"`) ou preferência online (`"continente"`)
+- Secção `physical_stores` em `family_preferences.example.json`: metadata de lojas presenciais (nome, frequência, notas)
+- `scripts/list_optimizer.py` → `generate_physical_list()`: gera lista de compras presenciais agrupada por loja
+- `generate_triage()` inclui `physical_items` e `total_physical` na resposta
+- Template `assets/templates/physical_shopping.md` para mensagens WhatsApp de lista presencial
+- Secção "🏪 COMPRAS PRESENCIAIS" no template `assets/templates/weekly_triage.md`
+
+**Centralização de config**
+- `scripts/config.py` — única fonte de verdade para integrações de mercado: enum `OnlineMarket`, `ONLINE_MARKET_IDS`, `MARKETS`, `DELIVERY_CONFIG`, `CACHE_TTL_HOURS`
+- `tests/test_config.py` — 19 testes para o módulo config
+- `price_cache.py`, `price_compare.py`, `list_optimizer.py` migrados para importar de `config.py`
+
+**Segurança**
+- `SECURITY.md` → nova secção "Configuração Segura Recomendada": princípio do menor privilégio, contas dedicadas por supermercado, cartões virtuais MB Way com limites por comerciante, expansão gradual de permissões em 4 fases
+
+**Venv**
+- Install steps em `SKILL.md` divididos em `create-venv` + `pip-deps`
+- Todos os caminhos `python3 {baseDir}/scripts/` actualizados para `{baseDir}/.venv/bin/python3 {baseDir}/scripts/` (resolve conflito com PEP 668 em Debian/Ubuntu)
+
+### Alterado
+
+- `data/family_preferences.json` renomeado para `data/family_preferences.example.json` (template commitado)
+- `data/family_preferences.json` adicionado ao `.gitignore` — ficheiro local, nunca commitar
+- `scripts/price_compare.py` → `optimize_split()` honra `preferred_store` para mercados online no algoritmo greedy
+- 40 novos testes em `test_list_optimizer.py` e `test_price_compare.py` para lojas presenciais e config centralizada
+- Total de testes: 73 → **113** (todos passam)
 
 ---
 

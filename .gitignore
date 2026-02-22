@@ -19,6 +19,9 @@ build/
 htmlcov/
 .coverage
 
+# Dados locais do utilizador (criados a partir dos .example.json)
+data/family_preferences.json
+
 # Env / secrets
 .env
 .env.*

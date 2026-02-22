@@ -53,7 +53,8 @@ Browser Tool (OpenClaw) → Continente/Pingo Doce → compra executada
 | `scripts/setup_crons.sh`         | Configura 6 cron jobs no OpenClaw via CLI                                         | Ao adicionar/remover crons                           |
 | `references/continente_guide.md` | Guia de navegação Continente (linguagem natural, sem CSS selectors)               | Quando o site mudar                                  |
 | `references/pingodoce_guide.md`  | Guia de navegação Pingo Doce (idem)                                               | Quando o site mudar                                  |
-| `data/family_preferences.json`   | Config do utilizador: household_size, admin_users, budget, morada                 | Template de exemplo — não colocar dados reais em PRs |
+| `data/family_preferences.example.json` | Template de configuração commitado no repositório                           | Ao adicionar campos novos à config                   |
+| `data/family_preferences.json`   | Config local do utilizador — **gitignored**, criado a partir do `.example.json`   | Nunca commitar; editar localmente                    |
 | `data/consumption_model.json`    | Seed data + dados aprendidos em runtime                                           | Seed data incluído; runtime data gerado pelo agente  |
 
 ## Comandos essenciais
@@ -123,7 +124,11 @@ refactor: simplificar fuzzy search no price_cache
 
 ### `data/family_preferences.json`
 
-Config do utilizador. **Não commitar com dados reais** — é um template de exemplo.
+Config local do utilizador. **Ficheiro gitignored — nunca commitar.**
+Criado pelo utilizador a partir de `data/family_preferences.example.json`:
+```bash
+cp data/family_preferences.example.json data/family_preferences.json
+```
 Campos importantes: `household_size`, `admin_users`, `budget.*`, `delivery_preferences.address`.
 
 Campo `physical_stores`: dicionário de lojas físicas onde o utilizador compra presencialmente
@@ -158,7 +163,8 @@ TTL: 24h. Verificar com `scripts/price_cache.py expired`.
 
 - **Não hardcodar seletores CSS** nos scripts Python ou nos guides de referência — o agente usa browser snapshots
 - **Não usar Playwright** — foi deliberadamente removido; a browser tool do OpenClaw substitui-o
-- **Não commitar dados pessoais** — `data/family_preferences.json` é um template; `data/shopping_history.json` e `data/consumption_model.json` não devem conter dados reais em PRs
+- **Não commitar `data/family_preferences.json`** — está no `.gitignore`; editar apenas localmente. Modificar sempre `data/family_preferences.example.json` quando se adicionam campos novos à config
+- **Não commitar dados pessoais** — `data/shopping_history.json` e `data/consumption_model.json` não devem conter dados reais em PRs
 - **Não introduzir dados bancários** em nenhum fluxo de automação — é uma garantia de segurança central do projecto
 - **Não contornar a aprovação do admin** no fluxo de checkout — toda a compra requer `✅` explícito
 - **Não remover o `ensure_ascii=False`** nos `json.dump()` — quebra caracteres portugueses
@@ -192,7 +198,7 @@ Ver `CONTRIBUTING.md` para guia detalhado.
 
 Para registar que o utilizador prefere comprar certos produtos presencialmente (Lidl, Makro, Auchan, etc.):
 
-1. Adicionar a loja a `data/family_preferences.json` → `physical_stores`:
+1. Adicionar a loja a `data/family_preferences.json` (local, gitignored) → `physical_stores`:
    ```json
    "lidl": { "name": "Lidl", "visit_frequency": "semanal", "notes": "Café e produtos sazonais" }
    ```

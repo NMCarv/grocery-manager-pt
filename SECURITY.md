@@ -118,7 +118,7 @@ Os ficheiros em `data/` podem conter informação sensível:
 
 | Ficheiro                  | Dados sensíveis potenciais           |
 | ------------------------- | ------------------------------------ |
-| `family_preferences.json` | Morada de entrega, nomes dos membros |
+| `family_preferences.json` | Morada de entrega, nomes dos membros — **gitignored**, nunca commitar |
 | `shopping_history.json`   | Histórico de compras e preços pagos  |
 | `consumption_model.json`  | Padrões de consumo da família        |
 

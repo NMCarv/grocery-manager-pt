@@ -1,5 +1,5 @@
 {
-  "_comment": "Configuração do agregado familiar. Edita este ficheiro antes de usar a skill. Ver README para referência completa de campos.",
+  "_comment": "TEMPLATE — copiar para family_preferences.json antes de usar: cp data/family_preferences.example.json data/family_preferences.json. O ficheiro family_preferences.json está no .gitignore e nunca deve ser commitado. Ver README para referência completa de campos.",
   "household_size": 4,
   "dietary_restrictions": [],
   "brand_preferences": {

@@ -34,6 +34,10 @@ metadata:
         kind: exec
         command: ".venv/bin/pip install -r requirements.txt"
         label: "Instalar dependências Python no venv"
+      - id: copy-prefs
+        kind: exec
+        command: "[ -f data/family_preferences.json ] || cp data/family_preferences.example.json data/family_preferences.json"
+        label: "Criar family_preferences.json a partir do template (se não existir)"
 ---
 
 # Grocery Manager PT 🛒
@@ -42,7 +46,9 @@ Skill de gestão de compras de mercearia para famílias em Portugal.
 Opera em ciclo contínuo: inventário → previsão → triagem → comparação → compra → tracking.
 
 O tamanho do agregado familiar, membros, orçamento e preferências de entrega são lidos de
-`{baseDir}/data/family_preferences.json`. Configurar este ficheiro antes de usar a skill.
+`{baseDir}/data/family_preferences.json`. Este ficheiro é local e está no `.gitignore` — é criado
+pelo install step a partir de `{baseDir}/data/family_preferences.example.json`. Editar antes de
+usar a skill.
 
 **Diretório da skill:** `{baseDir}`
 
@@ -64,7 +70,7 @@ Todos os ficheiros de dados vivem em `{baseDir}/data/`:
 | `{baseDir}/data/inventory.json` | Lista de compras ativa + estado do inventário |
 | `{baseDir}/data/shopping_history.json` | Histórico de todas as compras realizadas |
 | `{baseDir}/data/consumption_model.json` | Modelo de consumo aprendido (frequências, quantidades) |
-| `{baseDir}/data/family_preferences.json` | Preferências da família (marcas, budget, restrições) |
+| `{baseDir}/data/family_preferences.json` | Preferências da família (marcas, budget, restrições) — local, gitignored, criado a partir do `.example.json` |
 | `{baseDir}/data/price_cache.json` | Cache de preços recentes por supermercado |
 
 **Antes de qualquer ação, lê os ficheiros de dados relevantes.**
