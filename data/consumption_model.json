@@ -1,5 +1,5 @@
 {
-  "_comment": "Seed data com estimativas base para um agregado familiar típico. confidence=0.3 indica estimativas iniciais — o modelo ajusta-se com dados reais de compras. Quantidades são para referência; escalam automaticamente com household_size em family_preferences.json.",
+  "_comment": "Seed data com estimativas base para um agregado familiar típico. confidence=0.3 indica estimativas iniciais — o modelo ajusta-se com dados reais de compras. Quantidades são para referência; escalam automaticamente com household_size em family_preferences.json. preferred_store: null = sem preferência, vai para o mercado mais barato online. preferred_store: 'continente' ou 'pingodoce' = preferência de mercado online (price_compare privilegia esse mercado mas não obriga). preferred_store: 'lidl' ou 'makro' = loja presencial sem integração online (não entra no carrinho nem na comparação de preços — aparece apenas como lembrete de visita). A distinção é feita pela chave estar ou não em family_preferences.physical_stores.",
   "leite_meio_gordo": {
     "name": "Leite Meio-Gordo",
     "category": "lacticínios",
@@ -11,6 +11,7 @@
     "last_purchased": null,
     "estimated_stock_remaining_days": 3,
     "bulk_eligible": false,
+    "preferred_store": null,
     "confidence": 0.3,
     "active": true,
     "notes": "Referência: ~850ml/pessoa/semana. Ajustar avg_weekly_consumption ao teu household_size."
@@ -26,6 +27,7 @@
     "last_purchased": null,
     "estimated_stock_remaining_days": 3,
     "bulk_eligible": false,
+    "preferred_store": null,
     "confidence": 0.3,
     "active": true,
     "notes": "Referência: ~3-4 ovos/pessoa/semana. Ajustar ao household_size."
@@ -41,6 +43,7 @@
     "last_purchased": null,
     "estimated_stock_remaining_days": 2,
     "bulk_eligible": false,
+    "preferred_store": null,
     "confidence": 0.3,
     "active": true,
     "notes": "2 pães de forma/semana"
@@ -56,6 +59,7 @@
     "last_purchased": null,
     "estimated_stock_remaining_days": 3,
     "bulk_eligible": false,
+    "preferred_store": null,
     "confidence": 0.3,
     "active": true,
     "notes": "~430g proteína/pessoa/semana"
@@ -72,6 +76,7 @@
     "estimated_stock_remaining_days": 5,
     "bulk_eligible": true,
     "bulk_quantity": { "value": 10.0, "unit": "kg" },
+    "preferred_store": null,
     "confidence": 0.3,
     "active": true,
     "notes": "Comprar a granel: 5kg pack x2"
@@ -88,6 +93,7 @@
     "estimated_stock_remaining_days": 5,
     "bulk_eligible": true,
     "bulk_quantity": { "value": 7.0, "unit": "kg" },
+    "preferred_store": null,
     "confidence": 0.3,
     "active": true,
     "notes": "Vários formatos: esparguete, penne, fusilli"
@@ -104,6 +110,7 @@
     "estimated_stock_remaining_days": 7,
     "bulk_eligible": true,
     "bulk_quantity": { "value": 3.0, "unit": "L" },
+    "preferred_store": null,
     "confidence": 0.3,
     "active": true,
     "notes": "Comprar garrafão de 3L a granel"
@@ -120,6 +127,7 @@
     "estimated_stock_remaining_days": 14,
     "bulk_eligible": true,
     "bulk_quantity": { "value": 2.0, "unit": "un" },
+    "preferred_store": null,
     "confidence": 0.3,
     "active": true,
     "notes": "Referência: ~1 embalagem grande/3 semanas para 4-6 pessoas. Ajustar ao household_size."
@@ -136,6 +144,7 @@
     "estimated_stock_remaining_days": 7,
     "bulk_eligible": true,
     "bulk_quantity": { "value": 4.0, "unit": "pack" },
+    "preferred_store": null,
     "confidence": 0.3,
     "active": true,
     "notes": "Pack de 12/24 rolos. Comprar a granel"
@@ -151,6 +160,7 @@
     "last_purchased": null,
     "estimated_stock_remaining_days": 2,
     "bulk_eligible": false,
+    "preferred_store": null,
     "confidence": 0.3,
     "active": true,
     "notes": "~700g fruta/pessoa/semana. Comprar conforme época"
@@ -166,6 +176,7 @@
     "last_purchased": null,
     "estimated_stock_remaining_days": 2,
     "bulk_eligible": false,
+    "preferred_store": null,
     "confidence": 0.3,
     "active": true,
     "notes": "Tomate, alface, cebola, cenoura, batata. Ajustar conforme época"
@@ -175,16 +186,17 @@
     "category": "bebidas",
     "avg_weekly_consumption": { "value": 250.0, "unit": "g" },
     "avg_purchase_interval_days": 7,
-    "preferred_brand": "Delta",
-    "acceptable_brands": ["Delta", "Nespresso compatível", "Marca própria"],
+    "preferred_brand": "Lidl (Bellarom / Piazza d'Oro)",
+    "acceptable_brands": ["Lidl", "Delta", "Nespresso compatível"],
     "purchase_history": [],
     "last_purchased": null,
     "estimated_stock_remaining_days": 3,
     "bulk_eligible": true,
     "bulk_quantity": { "value": 1000.0, "unit": "g" },
+    "preferred_store": "lidl",
     "confidence": 0.3,
     "active": true,
-    "notes": "Para máquina de café. Ajustar se mudar de sistema"
+    "notes": "Preferência pelo café do Lidl. Comprar presencialmente — não disponível online. Ajustar se mudar de preferência."
   },
   "iogurtes": {
     "name": "Iogurtes",
@@ -197,6 +209,7 @@
     "last_purchased": null,
     "estimated_stock_remaining_days": 3,
     "bulk_eligible": false,
+    "preferred_store": null,
     "confidence": 0.3,
     "active": true,
     "notes": "~1-2 iogurtes/pessoa/semana"
@@ -212,6 +225,7 @@
     "last_purchased": null,
     "estimated_stock_remaining_days": 3,
     "bulk_eligible": false,
+    "preferred_store": null,
     "confidence": 0.3,
     "active": true,
     "notes": "Queijo flamengo para sanduíches + eventual queijo curado"
@@ -228,6 +242,7 @@
     "estimated_stock_remaining_days": 4,
     "bulk_eligible": true,
     "bulk_quantity": { "value": 48.0, "unit": "L" },
+    "preferred_store": null,
     "confidence": 0.3,
     "active": true,
     "notes": "~1.7L/pessoa/dia. Pack 6x1.5L ou garrafões 5L"
@@ -243,6 +258,7 @@
     "last_purchased": null,
     "estimated_stock_remaining_days": 7,
     "bulk_eligible": false,
+    "preferred_store": null,
     "confidence": 0.3,
     "active": true,
     "notes": "Referência: ~1 embalagem grande/2 semanas para 4-6 pessoas. Ajustar ao household_size."
@@ -258,6 +274,7 @@
     "last_purchased": null,
     "estimated_stock_remaining_days": 7,
     "bulk_eligible": false,
+    "preferred_store": null,
     "confidence": 0.3,
     "active": true,
     "notes": "Para pequeno-almoço e confecção"
@@ -273,8 +290,42 @@
     "last_purchased": null,
     "estimated_stock_remaining_days": 3,
     "bulk_eligible": false,
+    "preferred_store": null,
     "confidence": 0.3,
     "active": true,
     "notes": "Para sanduíches e refeições rápidas"
+  },
+  "_exemplo_preferencia_online": {
+    "name": "Produto com Preferência Online (Exemplo)",
+    "category": "outros",
+    "avg_weekly_consumption": { "value": 1.0, "unit": "un" },
+    "avg_purchase_interval_days": 7,
+    "preferred_brand": "Marca Específica",
+    "acceptable_brands": [],
+    "purchase_history": [],
+    "last_purchased": null,
+    "estimated_stock_remaining_days": 3,
+    "bulk_eligible": false,
+    "preferred_store": "continente",
+    "confidence": 0.3,
+    "active": false,
+    "notes": "EXEMPLO: preferred_store='continente' → preferência online. O agente compra este produto no Continente mesmo que o Pingo Doce seja ligeiramente mais barato. Não implica visita presencial. Diferente de 'lidl' (que estaria em physical_stores)."
+  },
+  "_exemplo_arroz_makro": {
+    "name": "Arroz Granel (Makro)",
+    "category": "conservas",
+    "avg_weekly_consumption": { "value": 3.0, "unit": "kg" },
+    "avg_purchase_interval_days": 30,
+    "preferred_brand": null,
+    "acceptable_brands": [],
+    "purchase_history": [],
+    "last_purchased": null,
+    "estimated_stock_remaining_days": 30,
+    "bulk_eligible": true,
+    "bulk_quantity": { "value": 25.0, "unit": "kg" },
+    "preferred_store": "makro",
+    "confidence": 0.3,
+    "active": false,
+    "notes": "EXEMPLO: Saco de 25kg no Makro/Recheio. Ativar (active: true) se usares Makro para granel. Ajustar bulk_quantity ao formato disponível."
   }
 }

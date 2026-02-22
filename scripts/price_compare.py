@@ -173,7 +173,9 @@ def optimize_split(items_with_prices: list, market_config: dict | None = None) -
     if market_config is None:
         market_config = {m: {"coupons": [], "balance": 0.0} for m in MARKETS}
 
-    # Passo 1: Atribuição greedy — cada item vai para o mercado com menor preço efetivo
+    # Passo 1: Atribuição greedy — cada item vai para o mercado com menor preço efetivo.
+    # Se o item tiver preferred_store que seja um mercado online, tenta-se aí primeiro;
+    # apenas se não estiver disponível é que se cai para o mercado mais barato.
     assignments = {m: [] for m in MARKETS}
     unavailable_items = []
 
@@ -181,31 +183,51 @@ def optimize_split(items_with_prices: list, market_config: dict | None = None) -
         item = item_data["item"]
         prices = item_data["prices"]
 
-        best_market = None
-        best_price = float("inf")
+        # Preferência de mercado online (ex: "continente" para produto específico da marca)
+        item_preferred = item.get("preferred_store") if item.get("preferred_store") in MARKETS else None
 
-        for market in MARKETS:
-            price_info = prices.get(market)
-            if not price_info or not price_info.get("available", True):
-                continue
-            effective = price_info.get("promo_effective_price") or price_info.get("price")
-            if effective is None:
-                continue
-            if effective < best_price:
-                best_price = effective
-                best_market = market
+        # Tentar mercado preferido primeiro
+        assigned = False
+        if item_preferred:
+            pref_info = prices.get(item_preferred)
+            if pref_info and pref_info.get("available", True):
+                pref_effective = pref_info.get("promo_effective_price") or pref_info.get("price")
+                if pref_effective is not None:
+                    assignments[item_preferred].append({
+                        "item": item,
+                        "price": pref_effective,
+                        "price_info": pref_info,
+                        "preferred_store_honored": True,
+                    })
+                    assigned = True
 
-        if best_market:
-            assignments[best_market].append({
-                "item": item,
-                "price": best_price,
-                "price_info": prices.get(best_market, {}),
-            })
-        else:
-            unavailable_items.append({
-                "name": item.get("name"),
-                "reason": "Não encontrado em nenhum mercado no cache",
-            })
+        if not assigned:
+            # Greedy normal: mercado mais barato disponível
+            best_market = None
+            best_price = float("inf")
+
+            for market in MARKETS:
+                price_info = prices.get(market)
+                if not price_info or not price_info.get("available", True):
+                    continue
+                effective = price_info.get("promo_effective_price") or price_info.get("price")
+                if effective is None:
+                    continue
+                if effective < best_price:
+                    best_price = effective
+                    best_market = market
+
+            if best_market:
+                assignments[best_market].append({
+                    "item": item,
+                    "price": best_price,
+                    "price_info": prices.get(best_market, {}),
+                })
+            else:
+                unavailable_items.append({
+                    "name": item.get("name"),
+                    "reason": "Não encontrado em nenhum mercado no cache",
+                })
 
     # Passo 2: Calcular subtotais e categorias por mercado
     def build_market_result(market: str, items: list) -> dict | None:

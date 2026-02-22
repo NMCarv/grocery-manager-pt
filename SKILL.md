@@ -5,11 +5,13 @@ description: >
   Mantém inventário da casa, aprende hábitos de consumo, faz triagem semanal,
   compara preços entre Continente Online e Pingo Doce Online, aproveita cupões
   e saldo, executa compras online, e coordena com a família via WhatsApp.
+  Também gera lembretes de compras presenciais para lojas sem entrega online
+  (Lidl, Makro, Auchan, etc.) com base em preferências configuradas.
   Usa esta skill quando o utilizador mencionar: compras, supermercado,
-  mercearia, lista de compras, Continente, Pingo Doce, "está a faltar",
-  "precisamos de", "acabou o", inventário da casa, preços de supermercado,
-  cupões, saldo de cartão, compra a granel, compra do mês, ou qualquer
-  referência a alimentos, produtos de limpeza, ou artigos domésticos.
+  mercearia, lista de compras, Continente, Pingo Doce, Lidl, Makro, Auchan,
+  "está a faltar", "precisamos de", "acabou o", inventário da casa, preços de
+  supermercado, cupões, saldo de cartão, compra a granel, compra do mês, ou
+  qualquer referência a alimentos, produtos de limpeza, ou artigos domésticos.
   Também se ativa automaticamente via cron para triagem semanal e stock checks.
 emoji: 🛒
 metadata:
@@ -108,6 +110,7 @@ Lê `{baseDir}/references/consumption_patterns.md` para a lógica completa.
 - Marca preferida e alternativas aceitáveis
 - Data da última compra + stock estimado restante
 - Flag de elegibilidade para compra a granel
+- `preferred_store`: `null` = compra online (Continente/Pingo Doce); string = loja presencial (ex: `"lidl"`)
 - Fator sazonal
 
 **Atualização:** Após cada compra, executa:
@@ -138,6 +141,23 @@ Se um produto tem ≤2 dias de stock estimado:
 5. **Aguardar:** Feedback durante 4h — processar respostas (adicionar/remover/aprovar)
 6. **Fechar:** Após aprovação (✅ do admin) ou timeout com maioria → avançar para comparação
 
+### Lojas presenciais (physical_items)
+
+O resultado do `triage` inclui o campo `physical_items` — produtos com `preferred_store` definido
+em `consumption_model.json`. Estes itens **nunca entram na comparação de preços online** nem no
+carrinho do Continente/Pingo Doce. São incluídos na mensagem de triagem como lembrete de visita presencial.
+
+Exemplos de uso:
+- `"preferred_store": "lidl"` — café que o utilizador prefere comprar no Lidl
+- `"preferred_store": "makro"` — granel (arroz, azeite) comprado no Makro/Recheio
+- `"preferred_store": "auchan"` — produto específico só disponível no Auchan
+
+As lojas físicas são configuradas em `{baseDir}/data/family_preferences.json` → `physical_stores`
+(nome de exibição, frequência de visita, notas). Para listar apenas compras presenciais:
+```
+python3 {baseDir}/scripts/list_optimizer.py physical
+```
+
 ### Formato da proposta
 ```
 🛒 Triagem Semanal — [DATA]
@@ -148,6 +168,11 @@ Se um produto tem ≤2 dias de stock estimado:
 📦 PARA GRANEL (próxima: [DATA]):
 [items com quantidades bulk]
 
+🏪 COMPRAS PRESENCIAIS:
+[LOJA 1] ([N] itens — visita [frequência]):
+  • [produto] — [quantidade] [unidade] ([marca])
+[LOJA 2] ...
+
 ⚠️ ALERTAS:
 [produtos urgentes ou observações]
 
@@ -155,6 +180,8 @@ Se um produto tem ≤2 dias de stock estimado:
 
 Respondam com ✅ para aprovar, ou adicionem/removam itens.
 ```
+
+Se não houver compras presenciais pendentes, omitir a secção 🏪.
 
 ## Módulo 4 — Comparação de Preços
 

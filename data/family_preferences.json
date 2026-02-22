@@ -20,5 +20,23 @@
   "admin_users": ["Admin"],
   "family_members": ["Admin"],
   "next_bulk_date": null,
-  "bulk_interval_days": 30
+  "bulk_interval_days": 30,
+  "physical_stores": {
+    "_comment": "Lojas onde preferes comprar presencialmente. O agente inclui estes itens na triagem semanal como lembretes de visita, mas nunca tenta fazer compras online aqui.",
+    "lidl": {
+      "name": "Lidl",
+      "visit_frequency": "semanal",
+      "notes": "Café e produtos sazonais. Visitar durante deslocações habituais."
+    },
+    "makro": {
+      "name": "Makro / Recheio",
+      "visit_frequency": "mensal",
+      "notes": "Granel de não-perecíveis (arroz, massa, azeite). Visita coincide com compra granel."
+    },
+    "_exemplo_auchan": {
+      "name": "Auchan",
+      "visit_frequency": "quinzenal",
+      "notes": "EXEMPLO: Produtos específicos não disponíveis online. Renomear para 'auchan' (sem underscore e sem '_exemplo_') para ativar."
+    }
+  }
 }

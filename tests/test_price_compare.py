@@ -78,7 +78,7 @@ class TestApplyCoupons:
 # optimize_split
 # ---------------------------------------------------------------------------
 
-def _make_item(name, category, continente_price, pingodoce_price=None, available=True):
+def _make_item(name, category, continente_price, pingodoce_price=None, available=True, preferred_store=None):
     prices = {}
     if continente_price is not None:
         prices["continente"] = {
@@ -93,7 +93,12 @@ def _make_item(name, category, continente_price, pingodoce_price=None, available
             "available": True,
         }
     return {
-        "item": {"name": name, "category": category, "quantity": {"value": 1, "unit": "un"}},
+        "item": {
+            "name": name,
+            "category": category,
+            "quantity": {"value": 1, "unit": "un"},
+            "preferred_store": preferred_store,
+        },
         "prices": prices,
     }
 
@@ -164,6 +169,49 @@ class TestOptimizeSplit:
         result = pc.optimize_split(items)
         # Com diferença mínima, deve haver nota de recomendação
         assert result["recommendation_note"] is not None
+
+    def test_preferred_store_assigned_even_if_more_expensive(self):
+        """preferred_store online é honrado mesmo que o mercado preferido seja mais caro."""
+        items = [
+            # Pingo Doce é mais barato (0.99 vs 1.29), mas preferência é Continente
+            _make_item("cafe", "bebidas",
+                       continente_price=1.29, pingodoce_price=0.99,
+                       preferred_store="continente"),
+        ]
+        result = pc.optimize_split(items)
+        assert "continente" in result["markets"]
+        cont_names = [i["name"] for i in result["markets"]["continente"]["items"]]
+        assert "cafe" in cont_names
+        # Não deve ir para Pingo Doce
+        pd_names = [i["name"] for i in result["markets"].get("pingodoce", {}).get("items", [])]
+        assert "cafe" not in pd_names
+
+    def test_preferred_store_fallback_when_unavailable(self):
+        """Se o mercado preferido não tiver preço, cai para o mais barato disponível."""
+        items = [
+            # preferred_store='continente' mas Continente não tem preço
+            _make_item("cafe", "bebidas",
+                       continente_price=None, pingodoce_price=0.99,
+                       preferred_store="continente"),
+        ]
+        result = pc.optimize_split(items)
+        # Deve ir para Pingo Doce (único disponível)
+        assert "pingodoce" in result["markets"]
+        pd_names = [i["name"] for i in result["markets"]["pingodoce"]["items"]]
+        assert "cafe" in pd_names
+
+    def test_preferred_store_ignored_if_not_online_market(self):
+        """preferred_store de loja presencial (ex: 'lidl') é ignorado — item vai para mais barato."""
+        items = [
+            # preferred_store='lidl' não é um mercado online → greedy normal
+            _make_item("cafe", "bebidas",
+                       continente_price=1.29, pingodoce_price=0.99,
+                       preferred_store="lidl"),
+        ]
+        result = pc.optimize_split(items)
+        # Deve ir para Pingo Doce (mais barato), pois 'lidl' não está em MARKETS
+        pd_names = [i["name"] for i in result["markets"].get("pingodoce", {}).get("items", [])]
+        assert "cafe" in pd_names
 
 
 # ---------------------------------------------------------------------------

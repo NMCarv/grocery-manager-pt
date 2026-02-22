@@ -20,7 +20,7 @@ scripts/                  ← Utilitários Python (dados, cálculos, cache)
 references/               ← Guias de navegação por supermercado (browser tool)
 assets/templates/         ← Templates de mensagens WhatsApp
 data/                     ← Dados persistentes (JSON, editáveis pelo utilizador)
-tests/                    ← 73 testes unitários (pytest)
+tests/                    ← 94 testes unitários (pytest)
 ```
 
 ### Fluxo de dados
@@ -30,7 +30,7 @@ WhatsApp (família)
     ↓
 OpenClaw Agent (lê SKILL.md + references/)
     ↓
-scripts/list_optimizer.py     ← gera lista semanal/granel
+scripts/list_optimizer.py     ← gera lista semanal/granel/presencial
 scripts/consumption_tracker.py ← actualiza modelo de consumo
 scripts/price_cache.py        ← persiste preços extraídos via browser tool
 scripts/price_compare.py      ← optimiza split multi-mercado
@@ -48,7 +48,7 @@ Browser Tool (OpenClaw) → Continente/Pingo Doce → compra executada
 | `scripts/price_cache.py`         | Cache de preços (TTL 24h), fuzzy search, parsing de preços PT (`1,29 €` → `1.29`) | Ao mudar estrutura do cache                          |
 | `scripts/price_compare.py`       | Otimização greedy multi-mercado com cupões, saldo, threshold de entrega           | Ao mudar algoritmo de preços                         |
 | `scripts/consumption_tracker.py` | Modelo de consumo: média ponderada (mais recente = maior peso), alertas, feedback | Ao mudar modelo de previsão                          |
-| `scripts/list_optimizer.py`      | Gera lista semanal/granel/triage a partir do modelo e inventário                  | Ao mudar geração de lista                            |
+| `scripts/list_optimizer.py`      | Gera lista semanal/granel/triage/presencial a partir do modelo e inventário       | Ao mudar geração de lista                            |
 | `scripts/setup_crons.sh`         | Configura 6 cron jobs no OpenClaw via CLI                                         | Ao adicionar/remover crons                           |
 | `references/continente_guide.md` | Guia de navegação Continente (linguagem natural, sem CSS selectors)               | Quando o site mudar                                  |
 | `references/pingodoce_guide.md`  | Guia de navegação Pingo Doce (idem)                                               | Quando o site mudar                                  |
@@ -68,6 +68,7 @@ python -m pytest tests/ -v
 python scripts/consumption_tracker.py check-stock
 python scripts/price_compare.py
 python scripts/list_optimizer.py triage --next-bulk-date 2026-03-01
+python scripts/list_optimizer.py physical
 python scripts/price_cache.py stats
 python scripts/price_cache.py parse-price "2,49 €"
 ```
@@ -84,7 +85,7 @@ python -m pytest tests/test_price_compare.py -v   # um ficheiro
 python -m pytest tests/ -k "coupon"  # por keyword
 ```
 
-**73 testes — todos devem passar antes de qualquer commit ou PR.**
+**94 testes — todos devem passar antes de qualquer commit ou PR.**
 
 O `conftest.py` na raiz injeta `scripts/` no `sys.path` do pytest.
 O `pyproject.toml` configura `testpaths = ["tests"]` e `pythonpath = ["scripts"]`.
@@ -122,6 +123,10 @@ refactor: simplificar fuzzy search no price_cache
 Config do utilizador. **Não commitar com dados reais** — é um template de exemplo.
 Campos importantes: `household_size`, `admin_users`, `budget.*`, `delivery_preferences.address`.
 
+Campo `physical_stores`: dicionário de lojas físicas onde o utilizador compra presencialmente
+(Lidl, Makro, Auchan, etc.). Cada entrada tem `name`, `visit_frequency`, `notes`. As chaves que
+começam por `_` (ex: `_exemplo_auchan`) são ignoradas pelo script e servem apenas como exemplos.
+
 ### `data/consumption_model.json`
 
 Chave = product_id (snake_case do nome). Campos críticos:
@@ -130,6 +135,9 @@ Chave = product_id (snake_case do nome). Campos críticos:
 - `estimated_stock_remaining_days` — calculado em runtime pelo tracker
 - `confidence` — entre 0.0 e 1.0. Abaixo de 0.5: produto não aparece em previsões automáticas
 - `bulk_eligible` — se `true`, aparece nas listas de granel
+- `preferred_store` — `null` = compra online (Continente/Pingo Doce); string = loja presencial
+  (ex: `"lidl"`, `"makro"`). Itens com preferred_store **não entram** na comparação de preços
+  online nem no carrinho — aparecem apenas como lembretes de visita em `physical_items`.
 
 ### `data/price_cache.json`
 
@@ -151,7 +159,8 @@ TTL: 24h. Verificar com `scripts/price_cache.py expired`.
 - **Não introduzir dados bancários** em nenhum fluxo de automação — é uma garantia de segurança central do projecto
 - **Não contornar a aprovação do admin** no fluxo de checkout — toda a compra requer `✅` explícito
 - **Não remover o `ensure_ascii=False`** nos `json.dump()` — quebra caracteres portugueses
-- **Não quebrar os 73 testes existentes** sem justificação documentada
+- **Não tentar comprar online** itens com `preferred_store` definido — esses itens são exclusivamente presenciais
+- **Não quebrar os 94 testes existentes** sem justificação documentada
 
 ### Atenção especial
 
@@ -170,6 +179,20 @@ TTL: 24h. Verificar com `scripts/price_cache.py expired`.
 6. Actualizar `CHANGELOG.md`
 
 Ver `CONTRIBUTING.md` para guia detalhado.
+
+## Adicionar uma loja presencial
+
+Para registar que o utilizador prefere comprar certos produtos presencialmente (Lidl, Makro, Auchan, etc.):
+
+1. Adicionar a loja a `data/family_preferences.json` → `physical_stores`:
+   ```json
+   "lidl": { "name": "Lidl", "visit_frequency": "semanal", "notes": "Café e produtos sazonais" }
+   ```
+2. Nos produtos relevantes em `data/consumption_model.json`, definir `"preferred_store": "lidl"`
+3. Esses produtos **não entram** em `generate_weekly_list()`, `generate_bulk_list()`, nem em `price_compare.py`
+4. Aparecem em `generate_physical_list()` e no campo `physical_items` da triagem
+
+Não é necessário criar guides de navegação nem credenciais — não há compra online.
 
 ## Segurança
 
