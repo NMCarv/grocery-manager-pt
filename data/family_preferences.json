@@ -1,0 +1,20 @@
+{
+  "household_size": 7,
+  "dietary_restrictions": [],
+  "brand_preferences": {},
+  "blocked_items": [],
+  "budget": {
+    "weekly_limit_eur": 150,
+    "monthly_limit_eur": 500,
+    "bulk_monthly_budget_eur": 120
+  },
+  "delivery_preferences": {
+    "preferred_days": ["sábado", "domingo"],
+    "preferred_time_slots": ["10h-13h"],
+    "address": "TODO: CONFIGURAR MORADA"
+  },
+  "admin_users": ["Nuno"],
+  "family_members": ["Nuno", "Mãe", "Pai", "Irmã1", "Irmã2", "Irmão", "Avó"],
+  "next_bulk_date": null,
+  "bulk_interval_days": 30
+}
