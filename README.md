@@ -38,7 +38,8 @@ git clone https://github.com/nmcarv/grocery-manager-pt.git \
 ### 2. Instalar dependências Python
 
 ```bash
-pip install -r requirements.txt
+python3 -m venv .venv
+.venv/bin/pip install -r requirements.txt
 ```
 
 ### 3. Configurar credenciais
@@ -210,17 +211,20 @@ Esta abordagem é mais resiliente a mudanças no layout dos sites do que scraper
 ## Desenvolvimento
 
 ```bash
-# Instalar dependências (inclui pytest)
-pip install -r requirements.txt
+# Criar venv e instalar dependências (inclui pytest)
+python3 -m venv .venv
+.venv/bin/pip install -r requirements.txt
 
 # Correr testes
-python -m pytest tests/ -v
+.venv/bin/python -m pytest tests/ -v
 
 # Testar um script directamente
-python scripts/consumption_tracker.py check-stock
-python scripts/price_compare.py
-python scripts/list_optimizer.py triage --next-bulk-date 2026-03-01
+.venv/bin/python scripts/consumption_tracker.py check-stock
+.venv/bin/python scripts/price_compare.py
+.venv/bin/python scripts/list_optimizer.py triage --next-bulk-date 2026-03-01
 ```
+
+> **Alternativa (ambiente de desenvolvimento local):** activar a venv com `source .venv/bin/activate` e usar `python` / `pytest` directamente no terminal.
 
 Ver [CONTRIBUTING.md](CONTRIBUTING.md) para como contribuir.
 

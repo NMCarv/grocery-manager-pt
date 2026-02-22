@@ -26,10 +26,14 @@ metadata:
         - PINGODOCE_EMAIL
         - PINGODOCE_PASSWORD
     install:
+      - id: create-venv
+        kind: exec
+        command: "python3 -m venv .venv"
+        label: "Criar virtual environment Python"
       - id: pip-deps
         kind: exec
-        command: "pip3 install requests aiohttp"
-        label: "Instalar dependências Python"
+        command: ".venv/bin/pip install -r requirements.txt"
+        label: "Instalar dependências Python no venv"
 ---
 
 # Grocery Manager PT 🛒
@@ -115,18 +119,18 @@ Lê `{baseDir}/references/consumption_patterns.md` para a lógica completa.
 
 **Atualização:** Após cada compra, executa:
 ```
-python3 {baseDir}/scripts/consumption_tracker.py update --purchase <ficheiro_compra.json>
+{baseDir}/.venv/bin/python3 {baseDir}/scripts/consumption_tracker.py update --purchase <ficheiro_compra.json>
 ```
 
 **Alertas proativos:** No stock check diário (cron 10h):
 ```
-python3 {baseDir}/scripts/consumption_tracker.py check-stock
+{baseDir}/.venv/bin/python3 {baseDir}/scripts/consumption_tracker.py check-stock
 ```
 Se um produto tem ≤2 dias de stock estimado:
 - Envia alerta: "⚠️ [Produto] deve acabar em ~2 dias. Adicionar à lista?"
 - Se o utilizador confirma → adiciona à shopping_list
 - Se o utilizador diz "ainda temos" → executa:
-  `python3 {baseDir}/scripts/consumption_tracker.py feedback --product "[nome]" --type still_have`
+  `{baseDir}/.venv/bin/python3 {baseDir}/scripts/consumption_tracker.py feedback --product "[nome]" --type still_have`
 
 ## Módulo 3 — Triagem Semanal
 
@@ -134,7 +138,7 @@ Se um produto tem ≤2 dias de stock estimado:
 
 ### Fluxo
 
-1. **Gerar lista:** `python3 {baseDir}/scripts/list_optimizer.py triage --next-bulk-date [DATA]`
+1. **Gerar lista:** `{baseDir}/.venv/bin/python3 {baseDir}/scripts/list_optimizer.py triage --next-bulk-date [DATA]`
 2. **Verificar:** Cruzar com `{baseDir}/data/family_preferences.json` (blocklist, budget)
 3. **Formatar:** Usar template `{baseDir}/assets/templates/weekly_triage.md`
 4. **Enviar:** Proposta ao grupo WhatsApp
@@ -155,7 +159,7 @@ Exemplos de uso:
 As lojas físicas são configuradas em `{baseDir}/data/family_preferences.json` → `physical_stores`
 (nome de exibição, frequência de visita, notas). Para listar apenas compras presenciais:
 ```
-python3 {baseDir}/scripts/list_optimizer.py physical
+{baseDir}/.venv/bin/python3 {baseDir}/scripts/list_optimizer.py physical
 ```
 
 ### Formato da proposta
@@ -190,7 +194,7 @@ Lê `{baseDir}/references/price_comparison_logic.md` para o algoritmo completo.
 **Resumo do fluxo:**
 1. Para cada item da lista, verificar cache: `{baseDir}/data/price_cache.json`
 2. Se cache expirado (<24h) → recolher preços via browser tool (ver abaixo)
-3. Executar otimização: `python3 {baseDir}/scripts/price_compare.py --output /tmp/comparison.json`
+3. Executar otimização: `{baseDir}/.venv/bin/python3 {baseDir}/scripts/price_compare.py --output /tmp/comparison.json`
 4. Formatar resultado usando template `{baseDir}/assets/templates/price_comparison.md`
 5. Enviar ao grupo WhatsApp para aprovação
 
@@ -200,7 +204,7 @@ Para cada produto em falta no cache:
 1. `browser open "https://www.continente.pt/pesquisa/?q=[produto]"`
 2. `browser snapshot` → identificar card do produto mais relevante
 3. Extrair nome, preço, preço por unidade, promoção ativa
-4. Gravar no cache: `python3 {baseDir}/scripts/price_cache.py update --market continente --product "[nome]" --data '[json]'`
+4. Gravar no cache: `{baseDir}/.venv/bin/python3 {baseDir}/scripts/price_cache.py update --market continente --product "[nome]" --data '[json]'`
 5. Repetir para Pingo Doce: `https://www.pingodoce.pt/pesquisa/?q=[produto]`
 
 ## Módulo 5 — Execução de Compras Online
@@ -262,7 +266,7 @@ Após ✅ do admin:
 
 **6. Pós-compra**
 - Atualizar `{baseDir}/data/shopping_history.json` com dados da compra
-- Executar: `python3 {baseDir}/scripts/consumption_tracker.py update --purchase <dados.json>`
+- Executar: `{baseDir}/.venv/bin/python3 {baseDir}/scripts/consumption_tracker.py update --purchase <dados.json>`
 - Notificar família: "✅ Encomenda [Nº] confirmada. Entrega: [slot]. Total: €[X]"
 
 ## Módulo 6 — Coordenação Familiar (WhatsApp)
@@ -305,10 +309,10 @@ Após ✅ do admin:
 
 | Script | Propósito | Como usar |
 |---|---|---|
-| `{baseDir}/scripts/price_cache.py` | Gerir cache de preços | `python3 ... search --product "leite"` |
-| `{baseDir}/scripts/price_compare.py` | Otimização multi-mercado | `python3 ... --output /tmp/comparison.json` |
-| `{baseDir}/scripts/consumption_tracker.py` | Atualizar/consultar modelo de consumo | `python3 ... check-stock` |
-| `{baseDir}/scripts/list_optimizer.py` | Gerar lista semanal/mensal otimizada | `python3 ... triage --next-bulk-date YYYY-MM-DD` |
+| `{baseDir}/scripts/price_cache.py` | Gerir cache de preços | `{baseDir}/.venv/bin/python3 ... search --product "leite"` |
+| `{baseDir}/scripts/price_compare.py` | Otimização multi-mercado | `{baseDir}/.venv/bin/python3 ... --output /tmp/comparison.json` |
+| `{baseDir}/scripts/consumption_tracker.py` | Atualizar/consultar modelo de consumo | `{baseDir}/.venv/bin/python3 ... check-stock` |
+| `{baseDir}/scripts/list_optimizer.py` | Gerar lista semanal/mensal otimizada | `{baseDir}/.venv/bin/python3 ... triage --next-bulk-date YYYY-MM-DD` |
 
 ## Referências
 

@@ -59,31 +59,33 @@ Browser Tool (OpenClaw) → Continente/Pingo Doce → compra executada
 ## Comandos essenciais
 
 ```bash
-# Instalar dependências
-pip install -r requirements.txt
+# Criar venv e instalar dependências (primeira vez)
+python3 -m venv .venv
+.venv/bin/pip install -r requirements.txt
 
 # Correr todos os testes (obrigatório antes de qualquer PR)
-python -m pytest tests/ -v
+.venv/bin/python -m pytest tests/ -v
 
 # Correr um script directamente
-python scripts/consumption_tracker.py check-stock
-python scripts/price_compare.py
-python scripts/list_optimizer.py triage --next-bulk-date 2026-03-01
-python scripts/list_optimizer.py physical
-python scripts/price_cache.py stats
-python scripts/price_cache.py parse-price "2,49 €"
+.venv/bin/python scripts/consumption_tracker.py check-stock
+.venv/bin/python scripts/price_compare.py
+.venv/bin/python scripts/list_optimizer.py triage --next-bulk-date 2026-03-01
+.venv/bin/python scripts/list_optimizer.py physical
+.venv/bin/python scripts/price_cache.py stats
+.venv/bin/python scripts/price_cache.py parse-price "2,49 €"
 ```
 
 Não existe Makefile nem passo de build — os scripts são executados directamente.
+O venv é criado em `.venv/` na raiz do projecto e excluído do git.
 
 ## Testes
 
 Os testes estão em `tests/` e usam pytest com fixtures em `tests/fixtures/`.
 
 ```bash
-python -m pytest tests/ -v           # todos os testes
-python -m pytest tests/test_price_compare.py -v   # um ficheiro
-python -m pytest tests/ -k "coupon"  # por keyword
+.venv/bin/python -m pytest tests/ -v           # todos os testes
+.venv/bin/python -m pytest tests/test_price_compare.py -v   # um ficheiro
+.venv/bin/python -m pytest tests/ -k "coupon"  # por keyword
 ```
 
 **113 testes — todos devem passar antes de qualquer commit ou PR.**

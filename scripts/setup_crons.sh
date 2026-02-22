@@ -41,7 +41,7 @@ openclaw cron add \
   --cron "0 10 * * *" \
   --tz "Europe/Lisbon" \
   --session isolated \
-  --message "Executa stock check diário: corre 'python3 {baseDir}/scripts/consumption_tracker.py check-stock'. Se houver alertas (produtos com ≤2 dias de stock), notifica a família. Se tudo OK, não envies mensagem." \
+  --message "Executa stock check diário: corre '{baseDir}/.venv/bin/python3 {baseDir}/scripts/consumption_tracker.py check-stock'. Se houver alertas (produtos com ≤2 dias de stock), notifica a família. Se tudo OK, não envies mensagem." \
   --announce \
   --channel whatsapp \
   ${WHATSAPP_TO:+--to "$WHATSAPP_TO"}
@@ -57,7 +57,7 @@ openclaw cron add \
   --cron "0 9 * * 0" \
   --tz "Europe/Lisbon" \
   --session isolated \
-  --message "Executa triagem semanal completa: (1) lê family_preferences.json para obter next_bulk_date, (2) corre 'python3 {baseDir}/scripts/list_optimizer.py triage --next-bulk-date [DATA]', (3) compara preços em cache e atualiza se necessário, (4) formata proposta usando template em {baseDir}/assets/templates/weekly_triage.md, (5) envia ao grupo familiar via WhatsApp, (6) aguarda aprovação durante 4h." \
+  --message "Executa triagem semanal completa: (1) lê family_preferences.json para obter next_bulk_date, (2) corre '{baseDir}/.venv/bin/python3 {baseDir}/scripts/list_optimizer.py triage --next-bulk-date [DATA]', (3) compara preços em cache e atualiza se necessário, (4) formata proposta usando template em {baseDir}/assets/templates/weekly_triage.md, (5) envia ao grupo familiar via WhatsApp, (6) aguarda aprovação durante 4h." \
   --announce \
   --channel whatsapp \
   ${WHATSAPP_TO:+--to "$WHATSAPP_TO"}
@@ -73,7 +73,7 @@ openclaw cron add \
   --cron "0 9 25 * *" \
   --tz "Europe/Lisbon" \
   --session isolated \
-  --message "Planeia compra a granel do mês seguinte: (1) corre 'python3 {baseDir}/scripts/list_optimizer.py bulk', (2) compara preços bulk entre Continente e Pingo Doce, (3) gera proposta para os próximos 30 dias, (4) envia ao grupo familiar para aprovação, (5) atualiza next_bulk_date em family_preferences.json." \
+  --message "Planeia compra a granel do mês seguinte: (1) corre '{baseDir}/.venv/bin/python3 {baseDir}/scripts/list_optimizer.py bulk', (2) compara preços bulk entre Continente e Pingo Doce, (3) gera proposta para os próximos 30 dias, (4) envia ao grupo familiar para aprovação, (5) atualiza next_bulk_date em family_preferences.json." \
   --announce \
   --channel whatsapp \
   ${WHATSAPP_TO:+--to "$WHATSAPP_TO"}
@@ -121,7 +121,7 @@ openclaw cron add \
   --cron "0 6 * * 3,6" \
   --tz "Europe/Lisbon" \
   --session isolated \
-  --message "Atualiza cache de preços: (1) corre 'python3 {baseDir}/scripts/price_cache.py expired' para listar entradas expiradas, (2) usa browser tool para pesquisar preços atualizados dos 20 produtos mais frequentes em consumption_model.json no Continente e Pingo Doce, (3) atualiza price_cache.json via 'python3 {baseDir}/scripts/price_cache.py update ...', (4) se algum produto subiu >10%, registar para relatório semanal. Não enviar mensagem a menos que encontre variação significativa."
+  --message "Atualiza cache de preços: (1) corre '{baseDir}/.venv/bin/python3 {baseDir}/scripts/price_cache.py expired' para listar entradas expiradas, (2) usa browser tool para pesquisar preços atualizados dos 20 produtos mais frequentes em consumption_model.json no Continente e Pingo Doce, (3) atualiza price_cache.json via '{baseDir}/.venv/bin/python3 {baseDir}/scripts/price_cache.py update ...', (4) se algum produto subiu >10%, registar para relatório semanal. Não enviar mensagem a menos que encontre variação significativa."
 
 echo "  ✅ Criado (sem entrega WhatsApp — apenas interno)"
 
