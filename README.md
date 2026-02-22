@@ -8,8 +8,6 @@
 
 Gere o ciclo completo de compras do teu agregado familiar: mantém inventário, aprende hábitos de consumo, faz triagem semanal, compara preços entre **Continente Online** e **Pingo Doce Online**, e executa compras com aprovação via **WhatsApp** — tudo de forma autónoma a partir do [OpenClaw](https://openclaw.ai).
 
----
-
 ## Funcionalidades
 
 | Módulo                   | O que faz                                                                       |
@@ -21,8 +19,6 @@ Gere o ciclo completo de compras do teu agregado familiar: mantém inventário, 
 | **Compra online**        | Executa o checkout via browser automation — nunca sem aprovação explícita       |
 | **Relatórios**           | Resumos semanais e mensais de gastos, poupança e tendências                     |
 
----
-
 ## Pré-requisitos
 
 - [OpenClaw](https://openclaw.ai) instalado e em execução
@@ -30,14 +26,12 @@ Gere o ciclo completo de compras do teu agregado familiar: mantém inventário, 
 - Contas activas no [Continente Online](https://www.continente.pt) e/ou [Pingo Doce Online](https://www.pingodoce.pt)
 - Python 3.11+
 
----
-
 ## Instalação
 
 ### 1. Copiar a skill para o workspace do OpenClaw
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/grocery-manager-pt.git \
+git clone https://github.com/nmcarv/grocery-manager-pt.git \
   ~/.openclaw/workspace/skills/grocery-manager-pt
 ```
 
@@ -92,8 +86,6 @@ chmod +x scripts/setup_crons.sh
 ./scripts/setup_crons.sh
 ```
 
----
-
 ## Uso
 
 No WhatsApp, qualquer membro do agregado pode escrever:
@@ -144,8 +136,6 @@ Admin: ✅
 Bot: ✅ Encomenda CON-12345678 confirmada. Entrega: sáb 10h-13h.
 ```
 
----
-
 ## Arquitetura
 
 ```
@@ -185,8 +175,6 @@ browser screenshot → enviar para aprovação
 
 Esta abordagem é mais resiliente a mudanças no layout dos sites do que scrapers com CSS selectors.
 
----
-
 ## Referência de Configuração
 
 ### `data/family_preferences.json`
@@ -217,8 +205,6 @@ Esta abordagem é mais resiliente a mudanças no layout dos sites do que scraper
 | `PINGODOCE_EMAIL`     | Sim         | Email da conta Pingo Doce Online    |
 | `PINGODOCE_PASSWORD`  | Sim         | Password da conta Pingo Doce Online |
 
----
-
 ## Desenvolvimento
 
 ```bash
@@ -236,8 +222,6 @@ python scripts/list_optimizer.py triage --next-bulk-date 2026-03-01
 
 Ver [CONTRIBUTING.md](CONTRIBUTING.md) para como contribuir.
 
----
-
 ## Segurança
 
 Este projeto interage com contas de supermercados e executa compras online.
@@ -250,8 +234,6 @@ Ver [SECURITY.md](SECURITY.md) para a política de segurança e como reportar vu
 - ❌ Nunca ultrapassa o budget configurado sem override explícito
 - ✅ Todas as ações de browser são logged para auditoria
 
----
-
 ## Supermercados Suportados
 
 | Supermercado      | Pesquisa | Carrinho | Checkout | Cupões | Saldo    |
@@ -261,8 +243,6 @@ Ver [SECURITY.md](SECURITY.md) para a política de segurança e como reportar vu
 
 Contribuições para outros supermercados são bem-vindas — ver [CONTRIBUTING.md](CONTRIBUTING.md#adicionar-um-novo-supermercado).
 
----
-
 ## Contribuir
 
 Contribuições são bem-vindas. Ver [CONTRIBUTING.md](CONTRIBUTING.md) para:
@@ -270,8 +250,6 @@ Contribuições são bem-vindas. Ver [CONTRIBUTING.md](CONTRIBUTING.md) para:
 - Como fazer setup do ambiente de desenvolvimento
 - Como adicionar suporte a novos supermercados
 - Como submeter um pull request
-
----
 
 ## Licença
 

@@ -21,7 +21,7 @@ Obrigado pelo interesse em contribuir! Este documento explica como participar no
 
 ```bash
 # 1. Fork o repositório e clona localmente
-git clone https://github.com/YOUR_USERNAME/grocery-manager-pt.git
+git clone https://github.com/nmcarv/grocery-manager-pt.git
 cd grocery-manager-pt
 
 # 2. Cria um branch para a tua alteração
@@ -47,7 +47,7 @@ Não é necessário ter o OpenClaw instalado para desenvolver os scripts Python 
 - **Melhorias aos guides de referência** — seletores atualizados, novos edge cases documentados
 - **Testes** — aumentar cobertura, testes de integração
 - **Traduções** — adaptar para outros países (Espanha, Brasil) com os seus supermercados
-- **Correção de bugs** — ver [issues abertas](https://github.com/YOUR_USERNAME/grocery-manager-pt/issues)
+- **Correção de bugs** — ver [issues abertas](https://github.com/nmcarv/grocery-manager-pt/issues)
 - **Documentação** — melhorar guides de referência, exemplos de configuração
 
 ### O que NÃO fazer
