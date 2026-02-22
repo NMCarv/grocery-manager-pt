@@ -1,0 +1,72 @@
+{
+  "continente": {
+    "leite meio-gordo": {
+      "name": "Leite Meio-Gordo Mimosa 1.5L",
+      "price": 1.29,
+      "price_per_unit": 0.86,
+      "unit": "L",
+      "brand": "Mimosa",
+      "promo": null,
+      "promo_effective_price": null,
+      "available": true,
+      "cached_at": "2026-02-22T08:00:00+00:00"
+    },
+    "ovos": {
+      "name": "Ovos M (12un)",
+      "price": 2.49,
+      "price_per_unit": 0.21,
+      "unit": "un",
+      "brand": null,
+      "promo": "2 por 4,50€",
+      "promo_effective_price": 2.25,
+      "available": true,
+      "cached_at": "2026-02-22T08:00:00+00:00"
+    },
+    "arroz": {
+      "name": "Arroz Agulha 1kg",
+      "price": 0.89,
+      "price_per_unit": 0.89,
+      "unit": "kg",
+      "brand": "Continente",
+      "promo": null,
+      "promo_effective_price": null,
+      "available": true,
+      "cached_at": "2026-02-22T08:00:00+00:00"
+    }
+  },
+  "pingodoce": {
+    "leite meio-gordo": {
+      "name": "Leite Meio-Gordo Terra Nostra 1.5L",
+      "price": 1.35,
+      "price_per_unit": 0.90,
+      "unit": "L",
+      "brand": "Terra Nostra",
+      "promo": null,
+      "promo_effective_price": null,
+      "available": true,
+      "cached_at": "2026-02-22T08:00:00+00:00"
+    },
+    "ovos": {
+      "name": "Ovos M (12un)",
+      "price": 2.59,
+      "price_per_unit": 0.22,
+      "unit": "un",
+      "brand": null,
+      "promo": null,
+      "promo_effective_price": null,
+      "available": true,
+      "cached_at": "2026-02-22T08:00:00+00:00"
+    },
+    "arroz": {
+      "name": "Arroz Carolino 1kg",
+      "price": 0.79,
+      "price_per_unit": 0.79,
+      "unit": "kg",
+      "brand": "Pingo Doce",
+      "promo": "Poupa 20%",
+      "promo_effective_price": 0.63,
+      "available": true,
+      "cached_at": "2026-02-22T08:00:00+00:00"
+    }
+  }
+}

@@ -50,11 +50,12 @@ def get_seasonal_factor(category):
 
 
 def weighted_average(values, max_weight=4):
-    """Média ponderada com peso decrescente (mais recente = mais relevante)."""
+    """Média ponderada — mais recente (último da lista) recebe maior peso."""
     if not values:
         return 0
     n = len(values)
-    weights = [min(max_weight, n - i) for i in range(n)]
+    # i=0 → peso 1 (mais antigo), i=n-1 → peso min(max_weight, n) (mais recente)
+    weights = [min(max_weight, i + 1) for i in range(n)]
     total_weight = sum(weights)
     return sum(v * w for v, w in zip(values, weights)) / total_weight
 

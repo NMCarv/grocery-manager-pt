@@ -141,8 +141,9 @@ def generate_triage(next_bulk_date=None):
     weekly = generate_weekly_list()
     
     if next_bulk_date:
+        # Usar datetime naive para evitar erros de timezone com dates simples (YYYY-MM-DD)
         next_bulk = datetime.fromisoformat(next_bulk_date)
-        days_to_bulk = (next_bulk - datetime.now(timezone.utc)).days
+        days_to_bulk = (next_bulk - datetime.now()).days
     else:
         days_to_bulk = 30  # Assume 1 mês
     

@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "last_updated": "2026-02-22T10:00:00Z",
+  "items": [],
+  "shopping_list": [
+    {
+      "id": "leite-001",
+      "name": "Leite Meio-Gordo",
+      "category": "lacticínios",
+      "quantity": { "value": 6, "unit": "L" },
+      "priority": "normal",
+      "added_by": "Nuno",
+      "added_at": "2026-02-21T10:00:00Z",
+      "for_bulk": false
+    },
+    {
+      "id": "ovos-001",
+      "name": "Ovos",
+      "category": "proteína",
+      "quantity": { "value": 24, "unit": "un" },
+      "priority": "normal",
+      "added_by": "Mãe",
+      "added_at": "2026-02-21T11:00:00Z",
+      "for_bulk": false
+    },
+    {
+      "id": "arroz-001",
+      "name": "Arroz",
+      "category": "conservas",
+      "quantity": { "value": 2, "unit": "kg" },
+      "priority": "normal",
+      "added_by": "system",
+      "added_at": "2026-02-22T09:00:00Z",
+      "for_bulk": true
+    }
+  ]
+}

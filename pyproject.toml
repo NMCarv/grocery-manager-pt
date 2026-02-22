@@ -1,0 +1,9 @@
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["scripts"]
+
+[tool.pyright]
+pythonVersion = "3.11"
+pythonPlatform = "Darwin"
+extraPaths = ["scripts"]
+reportMissingImports = "none"
