@@ -52,6 +52,8 @@ openclaw config set skills.entries.grocery-manager-pt.env.PINGODOCE_EMAIL    "em
 openclaw config set skills.entries.grocery-manager-pt.env.PINGODOCE_PASSWORD "password"
 ```
 
+> **Antes de configurar:** recomendamos criar contas dedicadas nos supermercados (email separado, password única) e ligar um cartão MB Way com limite mensal em vez do cartão principal. Ver [Configuração Segura Recomendada](SECURITY.md#configuração-segura-recomendada) para o guia completo, incluindo a progressão gradual de permissões sugerida para as primeiras semanas.
+
 ### 4. Configurar o agregado familiar
 
 Editar `data/family_preferences.json`:

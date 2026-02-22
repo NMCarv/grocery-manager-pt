@@ -10,8 +10,6 @@ Este projeto interage com:
 
 Tomamos a segurança a sério. Esta página descreve o que o projeto faz para proteger os utilizadores e como reportar vulnerabilidades.
 
----
-
 ## Garantias de Segurança do Bot
 
 ### O bot NUNCA irá:
@@ -31,7 +29,75 @@ Tomamos a segurança a sério. Esta página descreve o que o projeto faz para pr
 - Seleccionar slots de entrega
 - Confirmar encomendas após aprovação explícita
 
----
+## Configuração Segura Recomendada
+
+Antes de ligar o bot a contas reais, estas práticas limitam significativamente a exposição em caso de comportamento inesperado ou comprometimento de credenciais.
+
+### 1. Princípio do Mínimo Privilégio
+
+O bot apenas precisa de:
+
+- Fazer login numa conta de supermercado
+- Pesquisar produtos e adicionar ao carrinho
+- Activar cupões pré-carregados e usar saldo de fidelização
+- Confirmar o checkout com um método de pagamento **já guardado** na conta
+
+Não precisa de — e não deve ter — acesso a:
+
+- Contas bancárias ou cartões principais
+- Contas de supermercado com histórico de compras pessoal
+- Permissões de administrador em nenhuma plataforma
+
+### 2. Contas Dedicadas nos Supermercados
+
+Cria uma conta separada em cada supermercado **exclusivamente** para o bot:
+
+| O que fazer                                   | Porquê                                                                                           |
+| --------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| Email dedicado (ex: `compras-bot@gmail.com`)  | Isola o acesso; se as credenciais vierem a ser comprometidas, o teu email pessoal não é afectado |
+| Password única, nunca reutilizada             | Evita que um eventual leak comprometa outras contas                                              |
+| **Não** migrar o histórico de compras pessoal | A conta nova começa limpa — sem dados pessoais acumulados                                        |
+| Activar 2FA                                   | O bot pára e notifica quando aparece 2FA — o código chega ao teu telemóvel, não ao bot           |
+
+### 3. Método de Pagamento Limitado (MB Way)
+
+Em vez de ligar um cartão de débito/crédito principal, usa o **MB Way** para criar um cartão virtual com limite por comerciante:
+
+1. Abre o MB Way → **Cartões** → **Criar cartão**
+2. Associa o cartão a um comerciante específico (Continente ou Pingo Doce)
+3. Define um **limite mensal** próximo do teu orçamento configurado (ex: `monthly_limit_eur: 500` → cartão com limite €550)
+4. Guarda este cartão na conta do supermercado **antes** de activar o bot
+5. Repete para cada supermercado
+
+O bot usa exclusivamente métodos de pagamento pré-guardados — nunca introduz dados de cartão. O limite do cartão MB Way garante que, mesmo que algo corra mal, o dano financeiro é limitado e reversível.
+
+### 4. Progressão Gradual de Permissões
+
+Não actives tudo de uma vez. Segue uma progressão de confiança:
+
+**Fase 1 — Observação (semanas 1–2)**
+Deixa o bot gerar listas e comparar preços. Não aprovares nenhum ✅. Verifica se:
+
+- As previsões de consumo fazem sentido
+- Os preços no cache correspondem aos reais
+- As listas semanal e granel estão correctas
+
+**Fase 2 — Aprovação do carrinho (semanas 3–4)**
+Começa a aprovar carrinhos mas **cancela antes do checkout**. Verifica se:
+
+- Os produtos seleccionados são os correctos
+- As quantidades e marcas correspondem às preferências
+- O total estimado está dentro do budget
+
+**Fase 3 — Compras pequenas (mês 2)**
+Aprova checkouts para compras inferiores a €30. Verifica se:
+
+- As encomendas são confirmadas correctamente
+- O número de encomenda é registado em `shopping_history.json`
+- A entrega chega com os produtos esperados
+
+**Fase 4 — Operação normal**
+Após confiança estabelecida, usa o bot com o budget completo configurado.
 
 ## Credenciais e Segredos
 
@@ -45,8 +111,6 @@ openclaw config set skills.entries.grocery-manager-pt.env.CONTINENTE_PASSWORD ".
 Estas ficam guardadas em `~/.openclaw/openclaw.json` (na máquina do utilizador, não no repositório). Ver a [documentação do OpenClaw](https://docs.openclaw.ai) sobre como o OpenClaw protege secrets em runtime.
 
 **Importante:** Nunca commitar ficheiros `.env`, `openclaw.json` ou qualquer ficheiro com credenciais. O `.gitignore` já exclui estes ficheiros.
-
----
 
 ## Dados Persistentes
 
@@ -62,8 +126,6 @@ Os ficheiros em `data/` podem conter informação sensível:
 
 - Não commitar `data/` com dados reais para repositórios públicos (o `.gitignore` não exclui `data/` por omissão — adicionar se necessário)
 - Em ambientes partilhados, garantir que `~/.openclaw/` tem permissões de leitura restritas
-
----
 
 ## Reportar uma Vulnerabilidade
 
@@ -85,13 +147,9 @@ Para reportar uma vulnerabilidade:
 
 **Nota:** Este projeto não tem um programa de bug bounty.
 
----
-
 ## Versões Suportadas
 
 Apenas a versão mais recente do `main` branch recebe patches de segurança.
-
----
 
 ## Desactivar o Bot em Emergência
 
