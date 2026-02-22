@@ -21,10 +21,10 @@ import argparse
 from pathlib import Path
 from datetime import datetime, timezone
 
+from config import MARKETS, CACHE_TTL_HOURS
+
 DATA_DIR = Path(__file__).parent.parent / "data"
 CACHE_FILE = DATA_DIR / "price_cache.json"
-CACHE_TTL_HOURS = 24
-MARKETS = ["continente", "pingodoce"]
 
 
 # ---------------------------------------------------------------------------

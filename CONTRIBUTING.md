@@ -97,12 +97,18 @@ Em `SKILL.md`, na tabela de Scripts e na secção de Referências, adicionar ent
 
 Actualizar a descrição no frontmatter YAML para incluir o novo supermercado nos triggers de activação.
 
-### 3. Atualizar o price_compare.py
+### 3. Registar em config.py
 
-Em `scripts/price_compare.py`, adicionar o novo mercado à lista `MARKETS` e ao `DELIVERY_CONFIG`:
+`scripts/config.py` é a **única fonte de verdade** para integrações de mercado.
+Todos os outros scripts (`price_cache`, `price_compare`, `list_optimizer`) importam daqui.
 
 ```python
-MARKETS = ["continente", "pingodoce", "novo_supermercado"]
+# scripts/config.py
+
+class OnlineMarket(str, Enum):
+    CONTINENTE = "continente"
+    PINGODOCE = "pingodoce"
+    NOVO_SUPERMERCADO = "novo_supermercado"   # ← adicionar aqui
 
 DELIVERY_CONFIG = {
     ...
@@ -113,6 +119,8 @@ DELIVERY_CONFIG = {
     },
 }
 ```
+
+**Não** editar `MARKETS` em `price_cache.py` nem `price_compare.py` — esses valores são agora derivados automaticamente do enum.
 
 ### 4. Adicionar variáveis de ambiente ao SKILL.md
 

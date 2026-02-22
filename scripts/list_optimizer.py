@@ -19,6 +19,8 @@ import argparse
 from pathlib import Path
 from datetime import datetime, timezone, timedelta
 
+from config import ONLINE_MARKET_IDS
+
 DATA_DIR = Path(__file__).parent.parent / "data"
 BUFFER_FACTOR = 1.15  # 15% extra para segurança
 BULK_WEEKS = 4.5  # Compra a granel cobre ~4.5 semanas
@@ -31,17 +33,11 @@ def load_json(path, default=None):
     return default or {}
 
 
-def _physical_store_ids(prefs: dict) -> set:
-    """Retorna o conjunto de IDs de lojas presenciais (chaves sem prefixo '_')."""
-    return {k for k in prefs.get("physical_stores", {}) if not k.startswith("_")}
-
-
 def generate_weekly_list():
     """Gera lista de compra semanal baseada em modelo + itens manuais.
 
-    Produtos com preferred_store que seja uma loja presencial (definida em
-    family_preferences.physical_stores) são excluídos — aparecem em
-    generate_physical_list() como lembretes de compra presencial.
+    Produtos com preferred_store que NÃO seja um mercado online (ONLINE_MARKET_IDS)
+    são considerados presenciais e excluídos — aparecem em generate_physical_list().
 
     Produtos com preferred_store que seja um mercado online (ex: "continente")
     são incluídos normalmente, e o campo preferred_store é propagado para que
@@ -51,7 +47,6 @@ def generate_weekly_list():
     model = load_json(DATA_DIR / "consumption_model.json", {})
     prefs = load_json(DATA_DIR / "family_preferences.json", {})
 
-    physical_ids = _physical_store_ids(prefs)
     manual_items = inventory.get("shopping_list", [])
     predicted_items = []
 
@@ -61,9 +56,9 @@ def generate_weekly_list():
             continue
         if entry.get("confidence", 0) < 0.5:
             continue
-        # Itens presenciais (loja sem integração online) não entram na lista online
+        # Presencial = tem preferred_store definido e não é um mercado com integração online
         preferred_store = entry.get("preferred_store")
-        if preferred_store and preferred_store in physical_ids:
+        if preferred_store and preferred_store not in ONLINE_MARKET_IDS:
             continue
 
         days_left = entry.get("estimated_stock_remaining_days", float("inf"))
@@ -121,14 +116,13 @@ def generate_weekly_list():
 def generate_bulk_list():
     """Gera lista de compra a granel mensal.
 
-    Produtos com preferred_store que seja uma loja presencial são excluídos —
-    aparecem em generate_physical_list(). Produtos com preferred_store de um
-    mercado online são incluídos normalmente.
+    Produtos com preferred_store que NÃO seja um mercado online são considerados
+    presenciais e excluídos. Produtos com preferred_store de mercado online
+    são incluídos normalmente.
     """
     model = load_json(DATA_DIR / "consumption_model.json", {})
     prefs = load_json(DATA_DIR / "family_preferences.json", {})
 
-    physical_ids = _physical_store_ids(prefs)
     bulk_items = []
 
     for product_id, entry in model.items():
@@ -138,9 +132,9 @@ def generate_bulk_list():
             continue
         if entry.get("confidence", 0) < 0.5:
             continue
-        # Itens presenciais (loja sem integração online) não entram na lista online
+        # Presencial = tem preferred_store definido e não é um mercado com integração online
         preferred_store = entry.get("preferred_store")
-        if preferred_store and preferred_store in physical_ids:
+        if preferred_store and preferred_store not in ONLINE_MARKET_IDS:
             continue
 
         avg_weekly = entry.get("avg_weekly_consumption", {})
@@ -173,17 +167,20 @@ def generate_bulk_list():
 def generate_physical_list():
     """Gera lista de compras presenciais agrupada por loja física.
 
-    Inclui todos os produtos com preferred_store definido que estão ativos
-    e com confiança suficiente. Marca como urgente os que têm stock a acabar
-    nos próximos 9 dias — para incluir na próxima visita.
+    Inclui todos os produtos com preferred_store que NÃO seja um mercado online
+    (não está em ONLINE_MARKET_IDS). A distinção é feita via config.py — não é
+    necessário definir physical_stores em family_preferences para o routing.
 
+    O family_preferences.physical_stores serve apenas para metadados de exibição
+    (nome da loja, frequência de visita, notas).
+
+    Marca como urgente os que têm stock a acabar nos próximos 9 dias.
     Nunca executa compra online — serve apenas como lembrete de visita presencial.
     """
     model = load_json(DATA_DIR / "consumption_model.json", {})
     prefs = load_json(DATA_DIR / "family_preferences.json", {})
 
     physical_stores_config = prefs.get("physical_stores", {})
-    physical_ids = _physical_store_ids(prefs)  # apenas lojas sem integração online
     stores = {}
 
     for product_id, entry in model.items():
@@ -193,8 +190,8 @@ def generate_physical_list():
             continue
 
         preferred_store = entry.get("preferred_store")
-        # Só incluir se for uma loja presencial conhecida (definida em physical_stores)
-        if not preferred_store or preferred_store not in physical_ids:
+        # Presencial = tem preferred_store definido e NÃO está em ONLINE_MARKET_IDS
+        if not preferred_store or preferred_store in ONLINE_MARKET_IDS:
             continue
 
         days_left = entry.get("estimated_stock_remaining_days", float("inf"))

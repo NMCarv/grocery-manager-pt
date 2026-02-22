@@ -20,7 +20,7 @@ scripts/                  ← Utilitários Python (dados, cálculos, cache)
 references/               ← Guias de navegação por supermercado (browser tool)
 assets/templates/         ← Templates de mensagens WhatsApp
 data/                     ← Dados persistentes (JSON, editáveis pelo utilizador)
-tests/                    ← 94 testes unitários (pytest)
+tests/                    ← 113 testes unitários (pytest)
 ```
 
 ### Fluxo de dados
@@ -45,6 +45,7 @@ Browser Tool (OpenClaw) → Continente/Pingo Doce → compra executada
 | Ficheiro                         | Propósito                                                                         | Quando modificar                                     |
 | -------------------------------- | --------------------------------------------------------------------------------- | ---------------------------------------------------- |
 | `SKILL.md`                       | Instruções do agente OpenClaw. Usa `{baseDir}` para caminhos.                     | Ao mudar o comportamento do agente                   |
+| `scripts/config.py`              | Fonte única de verdade: `OnlineMarket` enum, `DELIVERY_CONFIG`, `ONLINE_MARKET_IDS` | Ao adicionar/remover supermercado online             |
 | `scripts/price_cache.py`         | Cache de preços (TTL 24h), fuzzy search, parsing de preços PT (`1,29 €` → `1.29`) | Ao mudar estrutura do cache                          |
 | `scripts/price_compare.py`       | Otimização greedy multi-mercado com cupões, saldo, threshold de entrega           | Ao mudar algoritmo de preços                         |
 | `scripts/consumption_tracker.py` | Modelo de consumo: média ponderada (mais recente = maior peso), alertas, feedback | Ao mudar modelo de previsão                          |
@@ -85,7 +86,7 @@ python -m pytest tests/test_price_compare.py -v   # um ficheiro
 python -m pytest tests/ -k "coupon"  # por keyword
 ```
 
-**94 testes — todos devem passar antes de qualquer commit ou PR.**
+**113 testes — todos devem passar antes de qualquer commit ou PR.**
 
 O `conftest.py` na raiz injeta `scripts/` no `sys.path` do pytest.
 O `pyproject.toml` configura `testpaths = ["tests"]` e `pythonpath = ["scripts"]`.
@@ -160,23 +161,28 @@ TTL: 24h. Verificar com `scripts/price_cache.py expired`.
 - **Não contornar a aprovação do admin** no fluxo de checkout — toda a compra requer `✅` explícito
 - **Não remover o `ensure_ascii=False`** nos `json.dump()` — quebra caracteres portugueses
 - **Não tentar comprar online** itens com `preferred_store` definido — esses itens são exclusivamente presenciais
-- **Não quebrar os 94 testes existentes** sem justificação documentada
+- **Não quebrar os 113 testes existentes** sem justificação documentada
 
 ### Atenção especial
 
 - **`{baseDir}`** em `SKILL.md` é uma variável do OpenClaw injectada em runtime — não substituir por caminhos hardcoded
 - **`weighted_average()`** em `consumption_tracker.py` dá mais peso ao ÚLTIMO elemento da lista (mais recente). Esta lógica foi corrigida de um bug — não reverter
 - **`datetime.fromisoformat(date_string)`** com datas simples (`YYYY-MM-DD`) retorna datetime naive — comparar com `datetime.now()` (não `datetime.now(timezone.utc)`) para evitar TypeError
-- **`price_compare.py`** expõe `MARKETS` e `DELIVERY_CONFIG` como constantes de módulo — os testes dependem disto para overriding
+- **`config.py`** é a única fonte de verdade para integrações de mercado — `price_compare.py`, `price_cache.py` e `list_optimizer.py` importam `MARKETS`, `ONLINE_MARKET_IDS` e `DELIVERY_CONFIG` daqui. Os testes que fazem `pc.MARKETS` ou `pc.DELIVERY_CONFIG` continuam a funcionar porque são re-exportados do `price_compare`
 
 ## Adicionar um novo supermercado
 
 1. Criar `references/NOME_guide.md` (seguir estrutura do `continente_guide.md`)
-2. Adicionar `"nome_mercado"` à lista `MARKETS` e ao `DELIVERY_CONFIG` em `scripts/price_compare.py`
+2. Em `scripts/config.py` — **única fonte de verdade para integrações**:
+   - Adicionar membro ao enum `OnlineMarket`
+   - Adicionar entrada ao `DELIVERY_CONFIG`
 3. Adicionar env vars ao frontmatter de `SKILL.md` (`requires.env`)
 4. Actualizar tabela de supermercados no `README.md`
 5. Adicionar testes em `tests/test_price_compare.py` para o novo mercado
 6. Actualizar `CHANGELOG.md`
+
+`price_cache.py`, `price_compare.py` e `list_optimizer.py` derivam `MARKETS` automaticamente
+do enum — não precisam de ser alterados quando se adiciona um novo mercado.
 
 Ver `CONTRIBUTING.md` para guia detalhado.
 

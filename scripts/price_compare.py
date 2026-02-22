@@ -17,25 +17,11 @@ import argparse
 from pathlib import Path
 from datetime import datetime, timezone
 
+from config import MARKETS, ONLINE_MARKET_IDS, DELIVERY_CONFIG, CACHE_TTL_HOURS
+
 DATA_DIR = Path(__file__).parent.parent / "data"
 
-MARKETS = ["continente", "pingodoce"]
-
-# Configuração de entrega por mercado
-DELIVERY_CONFIG = {
-    "continente": {
-        "cost": 3.99,          # Custo base (verificar valor atual no site)
-        "free_threshold": 50.0, # Grátis acima deste valor
-        "min_order": 0.0,
-    },
-    "pingodoce": {
-        "cost": 2.99,
-        "free_threshold": 100.0,  # Verificar valor atual no site
-        "min_order": 0.0,
-    },
-}
-
-CACHE_TTL_HOURS = 24
+# Parâmetros de algoritmo (não dependem do mercado — permanecem aqui)
 SIMPLICITY_THRESHOLD = 5.0   # Se diff < €5, preferir 1 mercado
 DELIVERY_GAP_THRESHOLD = 5.0  # Tentar rebalancear se faltam <€5 para entrega grátis
 
@@ -184,7 +170,7 @@ def optimize_split(items_with_prices: list, market_config: dict | None = None) -
         prices = item_data["prices"]
 
         # Preferência de mercado online (ex: "continente" para produto específico da marca)
-        item_preferred = item.get("preferred_store") if item.get("preferred_store") in MARKETS else None
+        item_preferred = item.get("preferred_store") if item.get("preferred_store") in ONLINE_MARKET_IDS else None
 
         # Tentar mercado preferido primeiro
         assigned = False
